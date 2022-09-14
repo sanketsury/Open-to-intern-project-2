@@ -51,14 +51,17 @@ const getCollegeDetails = async function (req, res) {
         const collegeID = await collegeModel.findOne({ name: collegeName }).select({ _id: 1 })
         if (!collegeID) return res.status(404).send({ status: false, msg: "College Not Found" })
 
-        const internData = await internModel.find({ collegeId: collegeID }).select({ _id: 1, name: 1, email: 1, mobile: 1 })
+        let internData = await internModel.find({ collegeId: collegeID }).select({ _id: 1, name: 1, email: 1, mobile: 1 })
+        if(internData.length==0){
+            internData = "There is no such intern in this college"
+        }
         const getData = await collegeModel.findOne({ name: collegeName })
 
         obj.name = getData.name
         obj.fullName = getData.fullName
         obj.logoLink = getData.logoLink
         obj.interns = internData
-        if ((obj.interns).length == 0) return res.status(404).send({ status: false, data: obj, msg: "There is no such intern in this college" })
+        //if ((obj.interns).length == 0) return res.status(404).send({ status: false, data: obj, msg: "There is no such intern in this college" })
         res.status(200).send({ status: true, data: obj })
     }
     catch (err) {
@@ -66,5 +69,4 @@ const getCollegeDetails = async function (req, res) {
     }
 }
 
-module.exports.createColleges = createColleges
-module.exports.getCollegeDetails = getCollegeDetails
+module.exports = {createColleges,getCollegeDetails};
