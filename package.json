@@ -1,6 +1,9 @@
 {
   "dependencies": {
-    "json-server": "^0.17.0",
-    "mongoose": "^6.6.0"
+    "json-server": "^0.4.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.6.0",
+    "nodemon": "^2.0.19",
+    "validator": "^13.7.0"
   }
 }
