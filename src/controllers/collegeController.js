@@ -1,6 +1,5 @@
 const collegeModel = require("../models/collegeModel");
-const { isValid, isValidURL } = require("../validations/validation");
-const checkName = require("validator");
+const { isValid, isValidUrl,isValidName } = require("../validations/validation");
 
 
 
@@ -13,24 +12,24 @@ const createColleges = async function (req, res) {
         if (isValid(name) == false) {
             return res.status(400).send({ status: false, msg: "Short name is required" });
         }
-        if (checkName.isAlpha(name) == false) {
+        if (isValidName.test(name)== false) {
             return res.status(400).send({ status: false, message: "Only alphabets are allowed in name" })
         }
         if (isValid(fullName) == false) {
             return res.status(400).send({ status: false, msg: "College name is required" });
         }
-        if (checkName.isAlpha(fullName) == false) {
+        if (isValidName.test(fullName) == false) {
             return res.status(400).send({ status: false, message: "Only alphabets are allowed in college name" })
         }
         if (isValid(logoLink) == false) {
             return res.status(400).send({ status: false, msg: "Logo link is required" });
         }
-        if (isValidURL(logoLink) == false) {
+        if (isValidUrl.test(logoLink) == false) {
             return res.status(400).send({ status: false, msg: "URL is wrong" });
         }
 
         const duplicate = await collegeModel.findOne({name:name});
-        if(duplicate.name==name){
+        if(duplicate){
             return res.status(400).send({ status: false, msg: "The college is already present" });
         }
 

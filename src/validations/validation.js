@@ -1,5 +1,6 @@
 
 
+const isValidName = new RegExp(/^[a-zA-Z ]{2,50}$/)
 
 
 const isValid = function(value) {
@@ -7,11 +8,9 @@ const isValid = function(value) {
     if (typeof value === "string" && value.trim().length === 0) return false;
     return true;
 };
-function isValidURL(value) {
-    var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
-    var regexp = new RegExp(expression);
-    return regexp.test(value);
-}
 
 
-module.exports = {isValid,isValidURL};
+const isValidUrl = new RegExp(/^((https?):\/\/)?([w|W]{3}\.)+[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/);
+
+
+module.exports = {isValid,isValidUrl,isValidName};
