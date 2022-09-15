@@ -43,14 +43,14 @@ const createInterns = async function (req, res) {
         collegeName = collegeName.toLowerCase().trim();
         if (!collegeName) return res.status(400).send({ status: false, message: "Please Enter college name" })
 
-        const takeCollegeId = await collegeModel.findOne({ name: collegeName }).select({ _id: 1 })
+        const takeCollegeId = await collegeModel.findOne({ name: collegeName }).select({_id:1});
         if (!takeCollegeId) return res.status(404).send({ status: false, message: "College Not Found" })
-
+        obj.collegeId = takeCollegeId._id
         const interns = await internModel.create(obj)
 
         let internData = {}
         internData.name = interns.name, internData.email = interns.email
-        internData.mobile = interns.mobile, internData.collegeId =interns.collegeId._id
+        internData.mobile = interns.mobile, internData.collegeId =interns.collegeId
         internData.isDeleted = interns.isDeleted
         return res.status(201).send({ status: true, data: internData })
     }
