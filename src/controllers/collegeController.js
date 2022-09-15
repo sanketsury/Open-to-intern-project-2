@@ -68,4 +68,5 @@ const getCollegeDetails = async function (req, res) {
     }
 }
 
-module.exports = {createColleges,getCollegeDetails};
+module.exports.createColleges = createColleges
+module.exports.getCollegeDetails = getCollegeDetails
