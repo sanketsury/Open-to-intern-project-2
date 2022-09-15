@@ -5,7 +5,7 @@ const { isValid, isValidUrl, isValidName } = require("../validations/validation"
 const createColleges = async function (req, res) {
     try {
         let { name, fullName, logoLink, isDeleted } = req.body;
-        name = name.toLowerCase();
+        
         if (Object.entries(req.body).length == 0) {
             return res.status(400).send({ status: false, message: "Data should be provided" })
         }
@@ -15,6 +15,7 @@ const createColleges = async function (req, res) {
         if (isValidName.test(name) == false) {
             return res.status(400).send({ status: false, message: "Only alphabets are allowed in name" })
         }
+        name = name.toLowerCase();
         if (isValid(fullName) == false) {
             return res.status(400).send({ status: false, message: "College name is required" });
         }

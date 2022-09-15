@@ -21,7 +21,6 @@ const createInterns = async function (req, res) {
         }
         obj.name = name
 
-        mobile = mobile.trim();
         if (mobile) {
             if (!isValidMobile.test(mobile)) return res.status(400).send({ status: false, message: "Please Enter 10 digit Mobile Number" })
             const checkMobile = await internModel.findOne({ mobile: mobile })
@@ -30,7 +29,7 @@ const createInterns = async function (req, res) {
         } else {
             return res.status(400).send({ status: false, message: "mobile number must be present" })
         }
-        email = email.trim();
+        
         if (email) {
             if (!isValidEmail.test(email)) return res.status(400).send({ status: false, message: "Please Enter Valid Email ID" })
             const checkEmail = await internModel.findOne({ email: email })
@@ -39,9 +38,10 @@ const createInterns = async function (req, res) {
         } else {
             return res.status(400).send({ status: false, message: "email must be present" })
         }
+        
 
-        collegeName = collegeName.toLowerCase().trim();
         if (!collegeName) return res.status(400).send({ status: false, message: "Please Enter college name" })
+        collegeName = collegeName.toLowerCase().trim();
 
         const takeCollegeId = await collegeModel.findOne({ name: collegeName }).select({_id:1});
         if (!takeCollegeId) return res.status(404).send({ status: false, message: "College Not Found" })
