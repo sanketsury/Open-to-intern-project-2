@@ -5,7 +5,8 @@ const { isValid, isValidName, isValidMobile, isValidEmail } = require("../valida
 const createInterns = async function (req, res) {
     try {
         const bodyData = req.body
-        const { name, mobile, email, collegeName } = bodyData
+        let { name, mobile, email, collegeName, isDeleted} = bodyData
+
         const obj = {}
 
         if (Object.keys(bodyData).length === 0) {
@@ -20,6 +21,7 @@ const createInterns = async function (req, res) {
         }
         obj.name = name
 
+        mobile = mobile.trim();
         if (mobile) {
             if (!isValidMobile.test(mobile)) return res.status(400).send({ status: false, data: "Please Enter 10 digit Mobile Number" })
             const checkMobile = await internModel.findOne({ mobile: mobile })
@@ -28,7 +30,7 @@ const createInterns = async function (req, res) {
         } else {
             return res.status(400).send({ status: false, data: "mobile must be present" })
         }
-
+        email = email.trim();
         if (email) {
             if (!isValidEmail.test(email)) return res.status(400).send({ status: false, data: "Please Enter Valid Email ID" })
             const checkEmail = await internModel.findOne({ email: email })
@@ -38,15 +40,21 @@ const createInterns = async function (req, res) {
             return res.status(400).send({ status: false, data: "email must be present" })
         }
 
+        collegeName = collegeName.toLowerCase().trim();
         if (!collegeName) return res.status(400).send({ status: false, data: "Please Enter college name" })
 
         const takeCollegeId = await collegeModel.findOne({ name: collegeName }).select({ _id: 1 })
         if (!takeCollegeId) return res.status(404).send({ status: false, data: "College Not Found" })
 
-        obj.collegeId = takeCollegeId
+        obj.collegeId = takeCollegeId;
 
-        const createData = await internModel.create(obj)
-        return res.status(201).send({ status: true, data: createData })
+        const interns = await internModel.create(obj)
+
+        let internData = {}
+        internData.name = interns.name, internData.email = interns.email
+        internData.mobile = interns.mobile, internData.collegeId =interns.collegeId._id
+        internData.isDeleted = interns.isDeleted
+        return res.status(201).send({ status: true, data: internData })
     }
     catch (err) {
         return res.status(500).send({ status: false, data: err.message })

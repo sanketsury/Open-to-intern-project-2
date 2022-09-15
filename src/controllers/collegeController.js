@@ -6,7 +6,8 @@ const { isValid, isValidUrl, isValidName } = require("../validations/validation"
 
 const createColleges = async function (req, res) {
     try {
-        const { name, fullName, logoLink, isDeleted } = req.body;
+        let { name, fullName, logoLink, isDeleted } = req.body;
+        name = name.toLowerCase();
         if (Object.entries(req.body).length == 0) {
             return res.status(400).send({ status: false, message: "Data should be provided" })
         }
@@ -25,7 +26,7 @@ const createColleges = async function (req, res) {
         if (isValid(logoLink) == false) {
             return res.status(400).send({ status: false, msg: "Logo link is required" });
         }
-        if (isValidUrl.test(logoLink) == false) {
+        if (isValidUrl(logoLink) == false) {
             return res.status(400).send({ status: false, msg: "URL is wrong" });
         }
 
@@ -33,9 +34,13 @@ const createColleges = async function (req, res) {
         if (duplicate) {
             return res.status(400).send({ status: false, msg: "The college is already present" });
         }
+        req.body.name = name;
 
-        const colleges = await collegeModel.create(req.body);
-        return res.status(201).send({ status: true, data: colleges });
+        const colleges = await collegeModel.create(req.body)
+        let collegeData = {};
+        collegeData.name = colleges.name,collegeData.fullName = colleges.fullName
+        collegeData.logoLink = colleges.logoLink,collegeData.isDeleted = colleges.isDeleted
+        return res.status(201).send({ status: true, data: collegeData });
 
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message });
@@ -45,7 +50,7 @@ const createColleges = async function (req, res) {
 const getCollegeDetails = async function (req, res) {
     try {
         const obj = {}
-        const collegeName = req.query.collegeName
+        const collegeName = req.query.collegeName.toLowerCase()
         if (!collegeName) return res.status(400).send({ status: false, msg: "Please enter college Name" })
 
         const collegeID = await collegeModel.findOne({ name: collegeName }).select({ _id: 1 })
