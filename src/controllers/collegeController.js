@@ -25,6 +25,7 @@ const createColleges = async function (req, res) {
         if (isValid(logoLink) == false) {
             return res.status(400).send({ status: false, msg: "Logo link is required" });
         }
+        
         if (isValidUrl.test(logoLink) == false) {
             return res.status(400).send({ status: false, msg: "URL is wrong" });
         }
