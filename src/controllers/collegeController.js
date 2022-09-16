@@ -1,6 +1,6 @@
 const collegeModel = require("../models/collegeModel");
 const internModel = require("../models/internModel");
-const { isValid, isValidUrl, isValidName } = require("../validations/validation");
+const { isValid, isValidUrl, isValidName,isValidCollegeName } = require("../validations/validation");
 
 const createColleges = async function (req, res) {
     try {
@@ -19,7 +19,7 @@ const createColleges = async function (req, res) {
         if (isValid(fullName) == false) {
             return res.status(400).send({ status: false, message: "College name is required" });
         }
-        if (isValidName.test(fullName) == false) {
+        if (!isValidCollegeName(fullName)) {
             return res.status(400).send({ status: false, message: "Only alphabets are allowed in college name" })
         }
         if (isValid(logoLink) == false) {
@@ -55,6 +55,7 @@ const getCollegeDetails = async function (req, res) {
         if (!collegeName) return res.status(400).send({ status: false, message: "Please enter college Name in Abbreviation" })
 collegeName = collegeName.toLowerCase()
 
+        collegeName = collegeName.toLowerCase()
         const collegeID = await collegeModel.findOne({ name: collegeName }).select({ _id: 1 })
         if (!collegeID) return res.status(404).send({ status: false, message: "College Not Found" })
 
