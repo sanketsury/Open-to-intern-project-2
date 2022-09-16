@@ -10,9 +10,7 @@
   "author": "Vikas Yadav , Rahul Ravidas , Sanket M Suryawanshi , Meenakshi Gupta",
   "dependencies": {
     "json-server": "^0.4.2",
-    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.6.0",
-    "nodemon": "^2.0.19",
-    "validator": "^13.7.0"
+    "nodemon": "^2.0.19"
   }
 }
