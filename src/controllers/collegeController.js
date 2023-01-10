@@ -1,11 +1,12 @@
 const collegeModel = require("../models/collegeModel");
 const internModel = require("../models/internModel");
-const { isValid, isValidUrl, isValidName,isValidCollegeName } = require("../validations/validation");
+const { isValid, isValidUrl, isValidName, isValidCollegeName } = require("../validations/validation");
 
 const createColleges = async function (req, res) {
+    // res.setHeader('Access-Control-Allow-origin','*')
     try {
         let { name, fullName, logoLink, isDeleted } = req.body;
-        
+
         if (Object.entries(req.body).length == 0) {
             return res.status(400).send({ status: false, message: "Data should be provided" })
         }
@@ -36,11 +37,8 @@ const createColleges = async function (req, res) {
         req.body.name = name;
 
         const colleges = await collegeModel.create(req.body)
-        // let collegeData = {};
-        // collegeData.name = colleges.name,collegeData.fullName = colleges.fullName
-        // collegeData.logoLink = colleges.logoLink,collegeData.isDeleted = colleges.isDeleted
-        // return res.status(201).send({ status: true, data: collegeData });
-        const collegeData = await collegeModel.findOne(colleges).select({_id:0,name:1,fullName:1,logoLink:1,isDeleted:1})
+
+        const collegeData = await collegeModel.findOne(colleges).select({ _id: 0, name: 1, fullName: 1, logoLink: 1, isDeleted: 1 })
         return res.status(201).send({ status: true, data: collegeData });
 
     } catch (error) {
@@ -49,18 +47,19 @@ const createColleges = async function (req, res) {
 }
 
 const getCollegeDetails = async function (req, res) {
+    //  res.setHeader('Access-Control-Allow-origin','*')
     try {
         const obj = {}
         let collegeName = req.query.collegeName
         if (!collegeName) return res.status(400).send({ status: false, message: "Please enter college Name in Abbreviation" })
-collegeName = collegeName.toLowerCase()
+        collegeName = collegeName.toLowerCase()
 
         collegeName = collegeName.toLowerCase()
         const collegeID = await collegeModel.findOne({ name: collegeName }).select({ _id: 1 })
         if (!collegeID) return res.status(404).send({ status: false, message: "College Not Found" })
 
         let internData = await internModel.find({ collegeId: collegeID }).select({ _id: 1, name: 1, email: 1, mobile: 1 })
-        if(internData.length==0){
+        if (internData.length == 0) {
             internData = "There is no such intern in this college"
         }
         const getData = await collegeModel.findOne({ name: collegeName })
@@ -76,4 +75,4 @@ collegeName = collegeName.toLowerCase()
     }
 }
 
-module.exports = {createColleges,getCollegeDetails};
+module.exports = { createColleges, getCollegeDetails };

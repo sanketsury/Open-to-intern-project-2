@@ -3,6 +3,7 @@ const internModel = require("../models/internModel")
 const { isValid, isValidName, isValidMobile, isValidEmail } = require("../validations/validation");
 
 const createInterns = async function (req, res) {
+    // res.setHeader('Access-Control-Allow-origin','*')
     try {
         const bodyData = req.body
         let { name, mobile, email, collegeName, isDeleted} = bodyData
